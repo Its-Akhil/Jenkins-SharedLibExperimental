@@ -1,12 +1,13 @@
-def call( String credName, String repoName, String tag){
-                  withCredentials(
-                    [usernamePassword(
-                        credentialsId: credName,
-                        passwordVariable: 'varForPass',
-                        usernameVariable: 'varForUname'
-                    )]){
-                        sh "docker login -u ${env.varForUname} -p ${env.varForPass}"
-                        sh "docker image tag ${repoName}:${tag} ${env.varForUname}/${repoName}:${tag}"
-                        sh "docker push ${env.varForUname}/${repoName}:${tag}"
-                    }
+def call(String credName, String repoName, String tag) {
+    withCredentials([
+        usernamePassword(
+            credentialsId: credName,
+            passwordVariable: 'varForPass',
+            usernameVariable: 'varForUname'
+        )
+    ]) {
+        sh 'echo $varForPass | docker login -u $varForUname --password-stdin'
+        sh "docker image tag ${repoName}:${tag} $varForUname/${repoName}:${tag}"
+        sh "docker push $varForUname/${repoName}:${tag}"
+    }
 }
