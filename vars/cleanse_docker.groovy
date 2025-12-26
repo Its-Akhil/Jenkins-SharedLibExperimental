@@ -1,8 +1,8 @@
 def call(){
-                sh "touch .dockerignore"
-                sh "whoami"
-                sh "cat Dockerfile"
-                sh 'echo CMD \'["gunicorn", "notesapp.wsgi:application", "--bind", "0.0.0.0:8000", "--workers=3"]\' >> Dockerfile'
-                sh "cat Dockerfile"
-                sh "docker buildx build -t notes-app:latest ."
+                sh "docker ps -aq | xargs -r docker stop"
+                sh "docker ps -aq | xargs -r docker rm -f"
+                sh "docker image prune -af"
+                sh "docker volume prune -f"
+                sh "docker network prune -f"
+                sh "docker builder prune -af"
 }
